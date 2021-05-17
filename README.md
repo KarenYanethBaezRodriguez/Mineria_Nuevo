@@ -1,0 +1,2 @@
+# Mineria_Nuevo
+Proyecto
