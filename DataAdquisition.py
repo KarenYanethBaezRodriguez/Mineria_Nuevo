@@ -1,9 +1,12 @@
+from os import linesep
+import matplotlib.pyplot as plt
 import requests
 import io
 from bs4 import BeautifulSoup
 import pandas as pd
 from tabulate import tabulate
-
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
  
 
 def get_soup(url: str) -> BeautifulSoup:
@@ -67,11 +70,30 @@ def print_tabulate(df: pd.DataFrame):
 df = pd.read_csv("Covid.csv") #get_csv_from_url()
 #print(df.columns) 
 df= df.drop(['code'], axis=1)
-df.columns=['Economia','%Disminución_de_crecimiento_en_consumo_CP','%Disminución_de_crecimiento_en_consumo_LP','Disminucion_de_crecimiento_de_la_inversion_CP','%Disminucion_de_crecimiento_de_la_inversion_LP','%Disminucion_de_ingresos_por_turismo_CP','%Disminucion_de_ingresos_por_turismo_LP','%Indice_de_rigurosidad_promedio','%Movilidad_promedio']
+df.columns=['Economia','Disminución_de_crecimiento_en_consumo_CP','Disminución del crecimiento del consumo largo plazo','Disminucion_de_crecimiento_de_la_inversion_CP','Disminucion_de_crecimiento_de_la_inversion_LP','Disminucion_de_ingresos_por_turismo_CP','Disminucion_de_ingresos_por_turismo_LP','Indice_de_rigurosidad_promedio','Movilidad_promedio']
+
+valores = df[["Economia","Disminución del crecimiento del consumo largo plazo"]]
+
+ax= valores.plot.bar(x="Economia",y="Disminución del crecimiento del consumo largo plazo", rot = 0)
+
+ax.set_title('Covid')
+ax.set_xlabel('Porcentaje')
+ax.set_ylabel('Paises')
+#plt.show()
+plt.savefig(f"img/covid.png")
+
+
+modl=ols("Disminución del crecimiento del consumo largo plazo ~ Economia", data=df.colums).fit()
+anova_df=sm.stats.anova_lm(modl,typ=2)
+if anova_df["PR(>F)"][0] < 0.5:
+    print("no hay diferencia")
+    else:
+        print("No hay diferncia")
+
 
 #df = get_info_transparencia_uanl(1)
 # print(df["Largest city"])
 # df = get_csv_from_url()
 # df = wiki()
 print_tabulate(df)
-df.to_csv("Limpio/Covid_sincode.csv", index=False) 
+#df.to_csv("Limpio/Covid_sincode.csv", index=False) 
