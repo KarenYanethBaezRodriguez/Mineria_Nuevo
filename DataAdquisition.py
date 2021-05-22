@@ -1,5 +1,6 @@
 from os import linesep
 import matplotlib.pyplot as plt
+from numpy import rot90
 import requests
 import io
 from bs4 import BeautifulSoup
@@ -77,18 +78,19 @@ valores = df[["Economia","Disminución del crecimiento del consumo largo plazo"]
 ax= valores.plot.bar(x="Economia",y="Disminución del crecimiento del consumo largo plazo", rot = 0)
 
 ax.set_title('Covid')
-ax.set_xlabel('Porcentaje')
-ax.set_ylabel('Paises')
+ax.set_xlabel('Paises')
+ax.set_ylabel('Porcentaje')
 #plt.show()
+plt.xticks(rotation=90)
 plt.savefig(f"img/covid.png")
 
 
-modl=ols("Disminución del crecimiento del consumo largo plazo ~ Economia", data=df.colums).fit()
-anova_df=sm.stats.anova_lm(modl,typ=2)
-if anova_df["PR(>F)"][0] < 0.5:
-    print("no hay diferencia")
-    else:
-        print("No hay diferncia")
+#modl=ols("Disminución del crecimiento del consumo largo plazo ~ Economia", data=df.colums).fit()
+#anova_df=sm.stats.anova_lm(modl,typ=2)
+#if anova_df["PR(>F)"][0] < 0.5:
+   # print("no hay diferencia")
+    #else:
+       # print("No hay diferncia")
 
 
 #df = get_info_transparencia_uanl(1)
